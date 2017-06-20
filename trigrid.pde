@@ -25,6 +25,11 @@ color backgroundColor = color(#FFFFFF);
 int triangleHeight = triangleSideLength;
 int halfTriangleHeight = triangleHeight * 0.5;
 int triangleWidth = triangleSideLength * sqrt(3) / 2;
+int x;
+
+int TRIANGLE_LEFT = 0;
+int TRIANGLE_RIGHT = 1;
+// int[][] triangleCentersInColumn;
 
 void setup() {
     background(backgroundColor);
@@ -41,6 +46,8 @@ void setup() {
     // set the width of the line. 
     strokeWeight(1);
 
+    triangleCentersInColumn = getTriangleCentersInColumn();
+    println(triangleCentersInColumn);
     drawBackgroundTriangles();
 }
 
@@ -68,3 +75,48 @@ void drawBackgroundTriangles() {
         }
     }
 }
+
+int[][] getTriangleCentersInColumn() {
+    ArrayList pointList = new ArrayList();
+    for (int y = 0; y < maxY; y += triangleHeight) {
+        pointList.add({y, 2 / 3 * triangleWidth, TRIANGLE_LEFT});
+        pointList.add({y + halfTriangleHeight, 1 / 3 * triangleWidth, TRIANGLE_RIGHT});
+    }
+    return pointList.toArray(new int[pointList.size()]);
+}
+
+/*
+int[] getTriangleCorners(int[] triangleCenterAndOrientation) {
+    int centerX = triangleCenterAndOrientation[0];
+    int centerY = triangleCenterAndOrientation[1];
+    int orientation = triangleCenterAndOrientation[2];
+
+    if (orientation == TRIANGLE_LEFT) {
+        return {centerX - triangleWidth };
+    } //
+}
+*/
+
+void mouseClicked() {
+    color c = get(mouseX, mouseY);
+    stroke(c);
+    fill(c);
+    triangle(0, 0, 0, triangleHeight, halfTriangleHeight, triangleWidth);
+    println(x++);
+}
+
+/*
+int[] getNearestTriangleCenter(int x, int y) {
+    int leftX = floor(x / triangleWidth);
+    int relativeX = x - leftX;
+    int relativeY = y;
+    for (int testY = 0; testY <
+}
+*/
+
+/*
+int integerDivide(int a, int b) {
+    float quotient = a / b;
+    return quotient > 0 ? floor(quotient) : ceiling(quotient);
+}
+*/
