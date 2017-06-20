@@ -3,8 +3,18 @@
 int maxX = 500;
 int maxY = 500;
 int triangleSideLength = 50;
-color backgroundLineColor = color(#FF0000); //  color(0x10FF0000);
+color backgroundLineColor = color(0x10FF0000);
 color backgroundColor = color(#FFFFFF);
+color COLOR_NOT_FOUND = color(#CAFEBA);
+/** The colors to cycle through when the user clicks on a triangle. */
+color[] triangleColor = {
+    // Don't include duplicate entries. 
+    // Don't make any value the same as the background color.
+    // Don't make any value the same as COLOR_NOT_FOUND.
+    #FF0000,
+    #00FF00,
+    #0000FF
+};
 
 // Equilateral triangles are oriented with left or right side vertical:
 //
@@ -115,12 +125,38 @@ int[][] getTrianglesInOddColumn() {
 }
 
 void mouseClicked() {
-    color c = #0000FF; // get(mouseX, mouseY);
-    stroke(c);
-    fill(c);
     float[] coords = getNearestTriangle(mouseX, mouseY);
+    int centerX = coords[0];
+    int centerY = coords[1];
+    color oldColor = get(centerX, centerY);
+    println("Finding new color for " + hex(oldColor));
+    color newColor = getNewColor(oldColor);
+    println("New color: " + hex(newColor));
+    // color c = triangleColor[0]; // #0000FF; // get(mouseX, mouseY);
+    stroke(newColor);
+    fill(newColor);
+
     triangle(coords[2], coords[3], coords[4], coords[5], coords[6], coords[7]);
     println(x++);
+}
+
+color getNewColor(color oldColor) {
+    if (oldColor == backgroundColor) {
+        return triangleColor[0];
+    } else {
+        for (int i = 0; i < triangleColor.length; i++) {
+            println("  comparing " + hex(oldColor) + " to " + hex(triangleColor[i]));
+            if (hex(oldColor) == hex(triangleColor[i])) {
+                int newIndex = i + 1;
+                if (newIndex >= triangleColor.length) {
+                    return backgroundColor;
+                } else {
+                    return triangleColor[newIndex];
+                }
+            }
+        }
+    }
+    return COLOR_NOT_FOUND;
 }
 
 float[] getNearestTriangle(int x, int y) {
