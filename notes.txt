@@ -16,14 +16,21 @@ Design Decisions
 ================
 
 Optimize for: 
-- YAGNI (build what's needed, anticipate reasonable extensions but don't build anything beyond what the design spec calls for.)
+- YAGNI (build what's needed, anticipate reasonable extensions but don't build anything beyond what the design spec calls for.).  No premature optimization.  (GUI should be "reasonably" responsive, but don't stress too much about optimization.  On the first pass, just get it working so you can get some feedback.)
 - Readability/maintainability and performance.
+- Try to keep the setup time manageable, but don't worry if it takes a second or two to load.  Once it's loaded, the GUI should be very responsive. (No noticeable delay for user.)
 - Programmer time.
 
-drawLines - popMatrix twice.  I don't want to leave anything permanently on the matrix stack, "just in case" someone calls "pop" one time too many.
+False start: draw background lines in a separate pass.
 Other options:
 - hard-code a background image.  Very fast load time but this is brittle - can't resize canvas or change line color.
 
 Hard-coding triangles because there are only a few ways to tile the plane with regular polygons and there doesn't seem to be an easy way to switch between them.
 
+Should use objects/encapsulation for triangles.
 
+GUI should work with partial triangles.
+
+"Edge case" - When user clicks on a triangle edge, arbitrarily choose one adjacent triangle to toggle color.
+
+Faint line may or may not show up when a colored triangle is next to a background triangle.
