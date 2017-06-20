@@ -27,9 +27,9 @@ int halfTriangleHeight = triangleHeight * 0.5;
 int triangleWidth = triangleSideLength * sqrt(3) / 2;
 int x;
 
-int TRIANGLE_LEFT = 0;
-int TRIANGLE_RIGHT = 1;
-// int[][] triangleCentersInColumn;
+// int TRIANGLE_LEFT = 0;
+// int TRIANGLE_RIGHT = 1;
+int[][] trianglesInColumn;
 
 void setup() {
     background(backgroundColor);
@@ -46,8 +46,8 @@ void setup() {
     // set the width of the line. 
     strokeWeight(1);
 
-    triangleCentersInColumn = getTriangleCentersInColumn();
-    println(triangleCentersInColumn);
+    trianglesInColumn = getTrianglesInColumn();
+    // println(trianglesInColumn);
     drawBackgroundTriangles();
 }
 
@@ -76,32 +76,37 @@ void drawBackgroundTriangles() {
     }
 }
 
-int[][] getTriangleCentersInColumn() {
+int[][] getTrianglesInColumn() {
     ArrayList pointList = new ArrayList();
     for (int y = 0; y < maxY; y += triangleHeight) {
-        pointList.add({y, 2 / 3 * triangleWidth, TRIANGLE_LEFT});
-        pointList.add({y + halfTriangleHeight, 1 / 3 * triangleWidth, TRIANGLE_RIGHT});
+        // left-facing triangle
+        pointList.add({
+                // center
+                2 / 3 * triangleWidth, y,
+                // three vertices
+                triangleWidth, y - halfTriangleHeight,
+                triangleWidth, y + halfTriangleHeight,
+                0, y
+        });
+        // right-facing triangle
+        pointList.add({
+                // center
+                1 / 3 * triangleWidth, y + halfTriangleHeight,
+                // three vertices
+                0, y,
+                0, y + triangleHeight,
+                triangleWidth, y + halfTriangleHeight
+        });
     }
     return pointList.toArray(new int[pointList.size()]);
 }
 
-/*
-int[] getTriangleCorners(int[] triangleCenterAndOrientation) {
-    int centerX = triangleCenterAndOrientation[0];
-    int centerY = triangleCenterAndOrientation[1];
-    int orientation = triangleCenterAndOrientation[2];
-
-    if (orientation == TRIANGLE_LEFT) {
-        return {centerX - triangleWidth };
-    } //
-}
-*/
-
 void mouseClicked() {
-    color c = get(mouseX, mouseY);
+    color c = #0000FF; // get(mouseX, mouseY);
     stroke(c);
     fill(c);
-    triangle(0, 0, 0, triangleHeight, halfTriangleHeight, triangleWidth);
+    int[] coords = trianglesInColumn[x];
+    triangle(coords[2], coords[3], coords[4], coords[5], coords[6], coords[7]);
     println(x++);
 }
 
@@ -111,12 +116,5 @@ int[] getNearestTriangleCenter(int x, int y) {
     int relativeX = x - leftX;
     int relativeY = y;
     for (int testY = 0; testY <
-}
-*/
-
-/*
-int integerDivide(int a, int b) {
-    float quotient = a / b;
-    return quotient > 0 ? floor(quotient) : ceiling(quotient);
 }
 */
