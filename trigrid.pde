@@ -37,8 +37,6 @@ int halfTriangleHeight = triangleHeight * 0.5;
 int triangleWidth = triangleSideLength * sqrt(3) / 2;
 int x;
 
-// int TRIANGLE_LEFT = 0;
-// int TRIANGLE_RIGHT = 1;
 int[][] trianglesInEvenColumn;
 int[][] trianglesInOddColumn;
 
@@ -60,7 +58,6 @@ void setup() {
     trianglesInEvenColumn = getTrianglesInEvenColumn();
     trianglesInOddColumn = getTrianglesInOddColumn();
 
-    // println(trianglesInColumn);
     drawBackgroundTriangles();
 }
 
@@ -78,8 +75,6 @@ void drawBackgroundTriangles() {
         }
 
         for (; y < maxY; y+= triangleHeight) {
-            // println(x + ", " + y);
-
             triangle(
                     x, y, 
                     x, y + triangleHeight, 
@@ -129,10 +124,9 @@ void mouseClicked() {
     int centerX = coords[0];
     int centerY = coords[1];
     color oldColor = get(centerX, centerY);
-    println("Finding new color for " + hex(oldColor));
+    // println("Finding new color for " + hex(oldColor));
     color newColor = getNewColor(oldColor);
-    println("New color: " + hex(newColor));
-    // color c = triangleColor[0]; // #0000FF; // get(mouseX, mouseY);
+    // println("New color: " + hex(newColor));
     stroke(newColor);
     fill(newColor);
 
@@ -145,7 +139,6 @@ color getNewColor(color oldColor) {
         return triangleColor[0];
     } else {
         for (int i = 0; i < triangleColor.length; i++) {
-            println("  comparing " + hex(oldColor) + " to " + hex(triangleColor[i]));
             if (hex(oldColor) == hex(triangleColor[i])) {
                 int newIndex = i + 1;
                 if (newIndex >= triangleColor.length) {
@@ -184,7 +177,6 @@ float[] getNearestTriangle(int x, int y) {
             bestTriangle = triangleCoords;
         }
     }
-    // println(bestTriangle);
     float[] returnVal = new float[8];
     arrayCopy(bestTriangle, returnVal);
     for (int i = 0; i < returnVal.length; i += 2) {
