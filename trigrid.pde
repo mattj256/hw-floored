@@ -4,6 +4,7 @@ int maxX = 500;
 int maxY = 500;
 int triangleSideLength = 50;
 color backgroundLineColor = color(0x10FF0000);
+// Background color must be opaque.
 color backgroundColor = color(#FFFFFF);
 color COLOR_NOT_FOUND = color(#CAFEBA);
 /** The colors to cycle through when the user clicks on a triangle. */
@@ -47,7 +48,7 @@ void setup() {
     size(maxX, maxY); 
       
     // smooth edges
-    smooth();
+    // smooth();
     
     // limit the number of frames per second
     frameRate(30);
@@ -125,26 +126,54 @@ void mouseClicked() {
     int centerY = coords[1];
     color oldColor = get(centerX, centerY);
     // println("Finding new color for " + hex(oldColor));
-    color newColor = getNewColor(oldColor);
+    color[] newColor = getNewColors(oldColor);
     // println("New color: " + hex(newColor));
-    stroke(newColor);
-    fill(newColor);
 
-    triangle(coords[2], coords[3], coords[4], coords[5], coords[6], coords[7]);
+    // First erase the old triangle with the opaque background color.
+    // We need to erase a slightly larger triangle than what we draw to ensure
+    // that the old triangle's border is completely erased.
+    strokeWeight(2);
+    drawTriangle(backgroundColor, backgroundColor,
+            coords[2], coords[3], coords[4], coords[5], coords[6], coords[7]);
+
+    // Now draw the new triangle, which might have nonopaque colors.
+    strokeWeight(1);
+    drawTriangle(newColor[0], newColor[1],
+            coords[2], coords[3], coords[4], coords[5], coords[6], coords[7]);
+
     println(x++);
 }
 
-color getNewColor(color oldColor) {
+void drawTriangle(color borderColor, color fillColor, 
+        int x1, int y1, int x2, int y2, int x3, int y3) {
+    stroke(borderColor);
+    fill(fillColor);
+    triangle(x1, y1, x2, y2, x3, y3);
+}
+
+/** 
+ *   Returns the new colors be used.
+ *   First element in return value is new line color.
+ *   Second element in return value is new fill color.
+ */
+color[] getNewColors(color oldColor) {
+    color[] returnVal = new color[2];
     if (oldColor == backgroundColor) {
-        return triangleColor[0];
+        returnVal[0] = triangleColor[0];
+        returnVal[1] = triangleColor[0];
+        return returnVal;
     } else {
         for (int i = 0; i < triangleColor.length; i++) {
             if (hex(oldColor) == hex(triangleColor[i])) {
                 int newIndex = i + 1;
                 if (newIndex >= triangleColor.length) {
-                    return backgroundColor;
+                    returnVal[0] = backgroundLineColor;
+                    returnVal[1] = backgroundColor;
+                    return returnVal;
                 } else {
-                    return triangleColor[newIndex];
+                    returnVal[0] = triangleColor[newIndex];
+                    returnVal[1] = triangleColor[newIndex];
+                    return returnVal;
                 }
             }
         }
