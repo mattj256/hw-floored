@@ -105,16 +105,35 @@ void mouseClicked() {
     color c = #0000FF; // get(mouseX, mouseY);
     stroke(c);
     fill(c);
-    int[] coords = trianglesInColumn[x];
+    float[] coords = getNearestTriangle(mouseX, mouseY);
     triangle(coords[2], coords[3], coords[4], coords[5], coords[6], coords[7]);
     println(x++);
 }
 
-/*
-int[] getNearestTriangleCenter(int x, int y) {
-    int leftX = floor(x / triangleWidth);
-    int relativeX = x - leftX;
+float[] getNearestTriangle(int x, int y) {
+    int columnNumber = floor(x / triangleWidth);
+    int offsetX = columnNumber * triangleWidth;
+    int relativeX = x - offsetX;
     int relativeY = y;
-    for (int testY = 0; testY <
+    float[] bestTriangle;
+    int bestDistance = triangleSideLength * 5;
+    for (int i = 0; i < trianglesInColumn.length; i++) {
+        int[] triangleCoords = trianglesInColumn[i];
+        int centerX = triangleCoords[0];
+        int centerY = triangleCoords[1];
+        int newDistance = dist(relativeX, relativeY, centerX, centerY);
+        if (newDistance < bestDistance) {
+            bestDistance = newDistance;
+            bestTriangle = triangleCoords;
+        }
+    }
+    // println(bestTriangle);
+    float[] returnVal = new float[8];
+    arrayCopy(bestTriangle, returnVal);
+    returnVal[0] += offsetX;
+    returnVal[2] += offsetX;
+    returnVal[4] += offsetX;
+    returnVal[6] += offsetX;
+    return returnVal;
 }
-*/
+
