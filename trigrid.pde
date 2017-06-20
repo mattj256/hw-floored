@@ -29,7 +29,8 @@ int x;
 
 // int TRIANGLE_LEFT = 0;
 // int TRIANGLE_RIGHT = 1;
-int[][] trianglesInColumn;
+int[][] trianglesInEvenColumn;
+int[][] trianglesInOddColumn;
 
 void setup() {
     background(backgroundColor);
@@ -46,7 +47,9 @@ void setup() {
     // set the width of the line. 
     strokeWeight(1);
 
-    trianglesInColumn = getTrianglesInColumn();
+    trianglesInEvenColumn = getTrianglesInEvenColumn();
+    trianglesInOddColumn = getTrianglesInOddColumn();
+
     // println(trianglesInColumn);
     drawBackgroundTriangles();
 }
@@ -76,7 +79,7 @@ void drawBackgroundTriangles() {
     }
 }
 
-int[][] getTrianglesInColumn() {
+int[][] getTrianglesInEvenColumn() {
     ArrayList pointList = new ArrayList();
     for (int y = 0; y < maxY; y += triangleHeight) {
         // left-facing triangle
@@ -101,6 +104,16 @@ int[][] getTrianglesInColumn() {
     return pointList.toArray(new int[pointList.size()]);
 }
 
+int[][] getTrianglesInOddColumn() {
+    int[][] returnVal = getTrianglesInEvenColumn();
+    for (int i = 0; i < returnVal.length; i++) {
+        for (int j = 0; j < returnVal[i].length; j += 2) {
+            returnVal[i][j] = triangleWidth - returnVal[i][j];
+        }
+    }
+    return returnVal;
+}
+
 void mouseClicked() {
     color c = #0000FF; // get(mouseX, mouseY);
     stroke(c);
@@ -117,8 +130,16 @@ float[] getNearestTriangle(int x, int y) {
     int relativeY = y;
     float[] bestTriangle;
     int bestDistance = triangleSideLength * 5;
-    for (int i = 0; i < trianglesInColumn.length; i++) {
-        int[] triangleCoords = trianglesInColumn[i];
+    int[][] trianglesToSearch;
+
+    if (columnNumber % 2 == 0) {
+        trianglesToSearch = trianglesInEvenColumn;
+    } else {
+        trianglesToSearch = trianglesInOddColumn;
+    }
+    
+    for (int i = 0; i < trianglesToSearch.length; i++) {
+        int[] triangleCoords = trianglesToSearch[i];
         int centerX = triangleCoords[0];
         int centerY = triangleCoords[1];
         int newDistance = dist(relativeX, relativeY, centerX, centerY);
@@ -130,10 +151,9 @@ float[] getNearestTriangle(int x, int y) {
     // println(bestTriangle);
     float[] returnVal = new float[8];
     arrayCopy(bestTriangle, returnVal);
-    returnVal[0] += offsetX;
-    returnVal[2] += offsetX;
-    returnVal[4] += offsetX;
-    returnVal[6] += offsetX;
+    for (int i = 0; i < returnVal.length; i += 2) {
+        returnVal[i] += offsetX;
+    }
     return returnVal;
 }
 
