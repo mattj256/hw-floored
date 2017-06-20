@@ -4,7 +4,7 @@ int maxX = 500;
 int maxY = 500;
 int triangleSideLength = 50;
 color backgroundLineColor = color(0x10FF0000);
-// Background color must be opaque.
+// Background color must be completely opaque.
 color backgroundColor = color(#FFFFFF);
 color COLOR_NOT_FOUND = color(#CAFEBA);
 /** The colors to cycle through when the user clicks on a triangle. */
@@ -12,6 +12,7 @@ color[] triangleColor = {
     // Don't include duplicate entries. 
     // Don't make any value the same as the background color.
     // Don't make any value the same as COLOR_NOT_FOUND.
+    // These values must be completely opaque.
     #FF0000,
     #00FF00,
     #0000FF
@@ -36,7 +37,6 @@ color[] triangleColor = {
 int triangleHeight = triangleSideLength;
 int halfTriangleHeight = triangleHeight * 0.5;
 int triangleWidth = triangleSideLength * sqrt(3) / 2;
-int x;
 
 int[][] trianglesInEvenColumn;
 int[][] trianglesInOddColumn;
@@ -48,7 +48,7 @@ void setup() {
     size(maxX, maxY); 
       
     // smooth edges
-    // smooth();
+    smooth();
     
     // limit the number of frames per second
     frameRate(30);
@@ -130,18 +130,19 @@ void mouseClicked() {
     // println("New color: " + hex(newColor));
 
     // First erase the old triangle with the opaque background color.
+
     // We need to erase a slightly larger triangle than what we draw to ensure
     // that the old triangle's border is completely erased.
-    strokeWeight(2);
-    drawTriangle(backgroundColor, backgroundColor,
-            coords[2], coords[3], coords[4], coords[5], coords[6], coords[7]);
+    if (alpha(newColor[0]) < 255) {
+        strokeWeight(2);
+        drawTriangle(backgroundColor, backgroundColor,
+                coords[2], coords[3], coords[4], coords[5], coords[6], coords[7]);
+    }
 
     // Now draw the new triangle, which might have nonopaque colors.
     strokeWeight(1);
     drawTriangle(newColor[0], newColor[1],
             coords[2], coords[3], coords[4], coords[5], coords[6], coords[7]);
-
-    println(x++);
 }
 
 void drawTriangle(color borderColor, color fillColor, 
