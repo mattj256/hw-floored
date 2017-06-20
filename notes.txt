@@ -1,0 +1,29 @@
+Matthew's Notes - Trigrid HW
+============================
+
+1. Browse documentation and website.  Generate time estimate.
+2. Download fish example, didn't work.
+3. Download simple line-drawing example.  Get it to work locally.  Yay!
+4. Change one parameter in simple line-drawing example.  It behaves the way I thought it would. Yay!
+5. Make more small changes.
+6. Write small program: each time the user clicks, draw a line between the previous mouse click location and the current mouse click location.
+7. Draw a series of parallel vertical lines, each line the same distance from its neighbors. (First time using a loop.)
+8. Draw all the background lines, using coordinate transformation and loops and a low alpha value.
+9. Draw an equilateral triangle.  (Don't worry about matching it to the grid.)
+10. Draw the background lines, one triangle at a time.
+
+Design Decisions
+================
+
+Optimize for: 
+- YAGNI (build what's needed, anticipate reasonable extensions but don't build anything beyond what the design spec calls for.)
+- Readability/maintainability and performance.
+- Programmer time.
+
+drawLines - popMatrix twice.  I don't want to leave anything permanently on the matrix stack, "just in case" someone calls "pop" one time too many.
+Other options:
+- hard-code a background image.  Very fast load time but this is brittle - can't resize canvas or change line color.
+
+Hard-coding triangles because there are only a few ways to tile the plane with regular polygons and there doesn't seem to be an easy way to switch between them.
+
+
