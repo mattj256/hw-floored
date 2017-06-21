@@ -34,3 +34,8 @@ GUI should work with partial triangles.
 "Edge case" - When user clicks on a triangle edge, arbitrarily choose one adjacent triangle to toggle color.
 
 Faint line may or may not show up when a colored triangle is next to a background triangle.
+
+Known issues
+============
+Clicking on triangles along the right-hand or bottom edges is buggy or inconsistent.  (Colors the wrong triangle, or does no action.)
+Sometimes shows a faint border between adjacent triangles with the same color.

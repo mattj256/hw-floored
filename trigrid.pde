@@ -1,3 +1,10 @@
+/**
+ * Trigrid homework, Matthew Jacobs
+ *
+ * Requirements doc:
+ * https://docs.google.com/document/d/14WBzSAOK6L-Nz_of0UoTFRRvX3Y8ayCQB1WnCHpmH8E/edit
+ */
+
 // All measurements are in pixels.
 
 int maxX = 500;
@@ -6,12 +13,10 @@ int triangleSideLength = 50;
 color backgroundLineColor = color(0x10FF0000);
 // Background color must be completely opaque.
 color backgroundColor = color(#FFFFFF);
-color COLOR_NOT_FOUND = color(#CAFEBA);
 /** The colors to cycle through when the user clicks on a triangle. */
 color[] triangleColor = {
     // Don't include duplicate entries. 
     // Don't make any value the same as the background color.
-    // Don't make any value the same as COLOR_NOT_FOUND.
     // These values must be completely opaque.
     #FF0000,
     #00FF00,
@@ -38,7 +43,14 @@ int triangleHeight = triangleSideLength;
 int halfTriangleHeight = triangleHeight * 0.5;
 int triangleWidth = triangleSideLength * sqrt(3) / 2;
 
+/** A triangle is represented by an array of 8 integers: 
+ * [centerX, centerY, x1, y1, x2, y2, x3, y3]
+ */   
 int[][] trianglesInEvenColumn;
+
+/** A triangle is represented by an array of 8 integers: 
+ * [centerX, centerY, x1, y1, x2, y2, x3, y3]
+ */   
 int[][] trianglesInOddColumn;
 
 void setup() {
@@ -122,21 +134,19 @@ void mouseClicked() {
     int centerX = coords[0];
     int centerY = coords[1];
     color oldColor = get(centerX, centerY);
-    // println("Finding new color for " + hex(oldColor));
     color[] newColor = getNewColors(oldColor);
-    // println("New color: " + hex(newColor));
 
-    // First erase the old triangle with the opaque background color.
+    // If the new triangle has a translucent border color, first erase the old triangle.
 
-    // We need to erase a slightly larger triangle than what we draw to ensure
-    // that the old triangle's border is completely erased.
     if (alpha(newColor[0]) < 255) {
+        // We need to erase a slightly larger triangle than what we draw to ensure  
+        // that the old triangle's border is completely erased.
         strokeWeight(2);
         drawTriangle(backgroundColor, backgroundColor,
                 coords[2], coords[3], coords[4], coords[5], coords[6], coords[7]);
     }
 
-    // Now draw the new triangle, which might have nonopaque colors.
+    // Now draw the new triangle.
     strokeWeight(1);
     drawTriangle(newColor[0], newColor[1],
             coords[2], coords[3], coords[4], coords[5], coords[6], coords[7]);
@@ -176,7 +186,11 @@ color[] getNewColors(color oldColor) {
             }
         }
     }
-    return COLOR_NOT_FOUND;
+
+    // Color not found.
+    returnVal[0] = backgroundLineColor;
+    returnVal[1] = backgroundColor;
+    return returnVal;
 }
 
 float[] getNearestTriangle(int x, int y) {
