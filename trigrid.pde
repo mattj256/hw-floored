@@ -46,20 +46,17 @@ void setup() {
     
     // canvas size
     size(maxX, maxY); 
-      
-    // smooth edges
-    smooth();
-    
+          
     // limit the number of frames per second
     frameRate(30);
     
     // set the width of the line. 
     strokeWeight(1);
 
+    drawBackgroundTriangles();
+
     trianglesInEvenColumn = getTrianglesInEvenColumn();
     trianglesInOddColumn = getTrianglesInOddColumn();
-
-    drawBackgroundTriangles();
 }
 
 void drawBackgroundTriangles() {
